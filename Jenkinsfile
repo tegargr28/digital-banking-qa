@@ -6,6 +6,12 @@ pipeline {
         disableConcurrentBuilds()
     }
 
+    environment {
+        // Jenkins agents run without a display; the driver factory
+        // reads this via automation.utils.config.
+        HEADLESS = 'true'
+    }
+
     stages {
         stage('Checkout') {
             steps {
