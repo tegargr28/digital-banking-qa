@@ -46,4 +46,11 @@ docker compose up -d
 Open http://localhost:8080 and complete the initial Jenkins setup. Install/configure a Python-capable agent and ensure Chrome/ChromeDriver are available on that agent before running browser tests. The included pipeline assumes a Linux agent with Python, Google Chrome, and Git installed; adjust the agent label to match your environment.
 
 ## Project status
-This repository is a starter scaffold. Test cases and automation must be expanded only after the application has been explored and actual behavior has been observed. Do not report unexecuted tests as passed.
+Learning and demonstration portfolio. All results are recorded only after real execution; unexecuted tests stay **Not Run** and are never reported as passed.
+
+- **Phase 0 — Audit:** complete. The repository started as a scaffold; gaps were catalogued before any changes.
+- **Phase 1 — Automation foundation:** merged via PR #1. Config-driven headless driver factory, automatic failure screenshots, Jenkins headless default, additional pytest markers. The QA master workbook `test-cases.xlsx` (Requirements, Test Scenarios, 22 Test Cases, RTM, Bug Reports, Test Execution, API and SQL Test Cases, Test Summary) is built on the project template. Five ParaBank REST API checks were executed for real; the UI smoke test passed in GitHub Actions CI after the driver fix.
+- **Phase 2 — Documentation and login automation:** Test Strategy, Risk Assessment, and Test Environment documents added (`docs/`); Selenium login coverage (valid and invalid credentials) added under `automation/`.
+- **Next:** Postman API collection, local synthetic SQL dataset and queries, wider manual execution of the designed test cases, transfer-funds automation.
+
+See `docs/test-strategy.md` for scope and approach, and the workbook's Test Execution sheet for the execution record behind every reported status.
