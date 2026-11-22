@@ -50,7 +50,8 @@ Learning and demonstration portfolio. All results are recorded only after real e
 
 - **Phase 0 — Audit:** complete. The repository started as a scaffold; gaps were catalogued before any changes.
 - **Phase 1 — Automation foundation:** merged via PR #1. Config-driven headless driver factory, automatic failure screenshots, Jenkins headless default, additional pytest markers. The QA master workbook `test-cases.xlsx` (Requirements, Test Scenarios, 22 Test Cases, RTM, Bug Reports, Test Execution, API and SQL Test Cases, Test Summary) is built on the project template. Five ParaBank REST API checks were executed for real; the UI smoke test passed in GitHub Actions CI after the driver fix.
-- **Phase 2 — Documentation and login automation:** Test Strategy, Risk Assessment, and Test Environment documents added (`docs/`); Selenium login coverage (valid and invalid credentials) added under `automation/`.
-- **Next:** Postman API collection, local synthetic SQL dataset and queries, wider manual execution of the designed test cases, transfer-funds automation.
+- **Phase 2 — Documentation and login automation:** Test Strategy, Risk Assessment, and Test Environment documents added (`docs/`); Selenium login coverage (valid and invalid credentials) added under `automation/`. The login suite found a real defect — **BUG-001**: the ParaBank web login accepts an invalid password (the API rejects it correctly). The defect is recorded in the workbook and the automation test is marked `xfail` against it.
+- **Phase 3 — API testing:** Postman collection for the ParaBank REST API added (`api-testing/`), mirroring the workbook's API cases. All 8 designed API cases have been executed for real (EXEC-001 and EXEC-006), including a transfer whose balance changes were verified to the cent.
+- **Next:** local synthetic SQL dataset and queries, wider manual execution of the designed test cases, transfer-funds UI automation.
 
 See `docs/test-strategy.md` for scope and approach, and the workbook's Test Execution sheet for the execution record behind every reported status.
