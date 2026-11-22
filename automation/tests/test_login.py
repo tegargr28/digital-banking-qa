@@ -26,6 +26,15 @@ def test_login_with_valid_credentials(driver):
 @pytest.mark.smoke
 @pytest.mark.ui
 @pytest.mark.negative
+@pytest.mark.xfail(
+    reason=(
+        "BUG-001: ParaBank web login accepts an invalid password and opens "
+        "the Accounts Overview instead of rejecting the login "
+        "(observed 2026-11-23; see Bug Reports in test-cases.xlsx). "
+        "The REST API rejects the same credentials correctly."
+    ),
+    strict=False,
+)
 def test_login_with_invalid_password_is_rejected(driver):
     """AUTH-TC-002: a wrong password is rejected with an error message."""
     page = LoginPage(driver).load(BASE_URL)
