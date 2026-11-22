@@ -1,0 +1,7 @@
+selenium>=4.20
+pytest>=8.0
+pytest-html>=4.1
+pytest-xdist>=3.5
+python-dotenv>=1.0
+requests>=2.31
+openpyxl>=3.1
