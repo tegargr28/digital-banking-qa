@@ -33,11 +33,11 @@ Each entry follows the same format: **Symptom → Cause → Resolution**. All en
 - **Cause:** The overview table is populated asynchronously; the page shell renders before the data.
 - **Resolution:** Wait explicitly for table rows to appear (`AccountsOverviewPage` does this). Do not replace the wait with a fixed sleep.
 
-## 5. Transfer test has only one account to work with
+## 5. Transfer test has fewer than two accounts to work with
 
-- **Symptom:** After login, a single account exists, so no transfer counterpart can be selected.
-- **Cause:** The demo login's data varies between resets; sometimes it holds one account only.
-- **Resolution:** The test opens a second account through the UI as part of its setup (Open New Account), then proceeds. The same situation was handled the same way in manual execution (EXEC-008).
+- **Symptom:** After login, no transfer counterpart can be selected, even though the overview lists two accounts.
+- **Cause:** The demo login's data varies between resets. Sometimes it holds a single account; after one reset it held a checking account plus a **loan account**, and loan accounts appear on the Accounts Overview but are not offered by the Transfer Funds form, so selecting one fails.
+- **Resolution:** The test reads the account IDs the transfer form actually offers and picks the pair from those. If fewer than two are offered, it opens a savings account through the UI as part of its setup (Open New Account), then proceeds. The same setup approach was used in manual execution (EXEC-008).
 
 ## 6. AUTH-TC-002 reports "xfailed" — is the suite broken?
 
