@@ -13,6 +13,7 @@ from automation.utils.config import (
 AMOUNT = 10.00
 
 
+@pytest.mark.smoke
 @pytest.mark.ui
 @pytest.mark.regression
 def test_valid_transfer_moves_the_exact_amount(driver):
