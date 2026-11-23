@@ -3,6 +3,10 @@
 | Item | Detail |
 |---|---|
 | Project | Digital Banking QA Portfolio |
+| Document owner | Tegar |
+| Version | 1.0 |
+| Status | Active |
+| Last updated | 2026-11-23 |
 | Application under test | ParaBank public demo |
 | Method | Risks are reviewed at each phase. A risk becomes a defect only when the underlying behaviour is actually observed and reproduced. |
 

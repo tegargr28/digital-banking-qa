@@ -3,6 +3,10 @@
 | Item | Detail |
 |---|---|
 | Project | Digital Banking QA Portfolio |
+| Document owner | Tegar |
+| Version | 1.0 |
+| Status | Active |
+| Last updated | 2026-11-23 |
 | Principle | No real banking systems, credentials, or data are used anywhere in this project. |
 
 ## Application under test
@@ -41,7 +45,7 @@ Configuration is environment-driven; nothing sensitive is committed.
 ## Test data
 
 - **UI/API:** the public demo account and data created inside the demo application only.
-- **SQL:** a local synthetic dataset (planned, `database-testing/`) that mirrors banking concepts — customers, accounts, transactions — with fully fictional values. There is no connection to any real bank database.
+- **SQL:** a local synthetic dataset (`database-testing/`) that mirrors banking concepts — customers, accounts, transactions — with fully fictional values. There is no connection to any real bank database.
 
 ## Entry checklist for an execution session
 

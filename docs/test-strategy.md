@@ -3,6 +3,9 @@
 | Item | Detail |
 |---|---|
 | Project | Digital Banking QA Portfolio |
+| Document owner | Tegar |
+| Version | 1.0 |
+| Last updated | 2026-11-23 |
 | Application under test | ParaBank public demo — https://parabank.parasoft.com/parabank/index.htm |
 | Companion documents | Test Plan (`docs/test-plans/test-plan.md`), QA master workbook (`test-cases.xlsx`), Risk Assessment (`docs/risk-assessment.md`), Test Environment (`docs/test-environment.md`) |
 | Status | Living document; updated as scope and evidence grow |
@@ -44,7 +47,7 @@
 |---|---|---|
 | Exploratory testing | Session-based charters per feature; findings feed designed test cases | Workbook: Exploratory Testing sheet |
 | System testing (manual) | Designed scenarios and test cases per requirement, positive and negative | Workbook: Test Scenarios, Test Cases |
-| API testing | REST checks against the ParaBank demo services; status codes, payload fields, error handling | Workbook: API Test Cases; Postman collection (planned) |
+| API testing | REST checks against the ParaBank demo services; status codes, payload fields, error handling | Workbook: API Test Cases; Postman collection in `api-testing/` |
 | Database testing | SQL queries over a local synthetic dataset mirroring banking concepts (accounts, transactions, balances) | Workbook: SQL Test Cases; `database-testing/` |
 | UI automation | Selenium + pytest, Page Object Model, headless Chrome | `automation/` |
 | Regression | Automated smoke subset on every push/PR in CI; wider manual regression per release of this portfolio | GitHub Actions workflow |
@@ -84,8 +87,8 @@ Business rules are only designed against **after the actual application behaviou
 |---|---|
 | Test management | Excel workbook (project template) |
 | UI automation | Python, Selenium WebDriver, pytest, pytest-html |
-| API testing | curl / Postman (planned) |
-| Database testing | SQLite or local SQL engine with synthetic data (planned) |
+| API testing | curl / Postman |
+| Database testing | SQLite with a local synthetic dataset (`database-testing/`) |
 | CI | GitHub Actions; Jenkins (local, Docker Compose) |
 | Version control | Git / GitHub |
 

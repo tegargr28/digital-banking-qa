@@ -5,7 +5,7 @@ End-to-end Quality Assurance portfolio project using the public ParaBank demo ap
 ## Scope
 - Manual testing: test plan, scenarios, test cases, defect reports.
 - UI automation: Python, Selenium WebDriver, Pytest, Page Object Model.
-- API testing: Postman collection (to be added after API exploration).
+- API testing: Postman collection for the ParaBank REST API (`api-testing/`); all designed cases executed.
 - Database testing: local synthetic dataset and SQL exercises. No access to ParaBank's production database is assumed.
 - CI: GitHub Actions and Jenkins.
 - Containerization: Docker Compose for a local Jenkins controller.
@@ -56,6 +56,26 @@ Learning and demonstration portfolio. All results are recorded only after real e
 - **Phase 5 — Transfer automation:** Selenium coverage for the valid-transfer case (TRF-TC-001) added under `automation/` (Accounts Overview and Transfer Funds page objects), asserting the exact balance deltas on both accounts.
 - **Phase 6 — Remaining features:** the last four features were explored first (forms, messages, behaviour probes), then given designed cases and a full manual execution (EXEC-010): 11 new cases, 7 Pass, 4 Fail. Bill Payment's form validations work, but a payment reported as "successful" is **never posted** to the account and no funds check exists (**BUG-006**, Critical); Update Contact Info submissions always return a generic internal error and never save (**BUG-007**); an empty loan amount hits the same generic error instead of validation (**BUG-008**). Loan approval/denial and account opening (both types, exact $90.00 funding) work correctly. Every feature in the workbook now has executed test cases: **33 UI cases (23 Pass, 10 Fail), 8 API cases Pass, 6 SQL cases Pass, 8 defects recorded** — all from real executions (EXEC-001..EXEC-010).
 
+- **Phase 7 — Documentation:** the documentation set was completed and aligned to professional standards: a Requirements Specification (SRS), an Automation Guide, CI/CD documentation, and a Troubleshooting Guide were added; stale content was corrected; the scenario index now mirrors the workbook; and every document carries owner/version/status metadata and cross-references.
+
 See `docs/interview-prep.md` for STAR-format summaries of the key findings.
 
 See `docs/test-strategy.md` for scope and approach, and the workbook's Test Execution sheet for the execution record behind every reported status.
+
+## Documentation index
+
+| Document | Purpose |
+|---|---|
+| `docs/requirements-specification.md` | Functional requirements FR-001..FR-011 and their validation status |
+| `docs/test-strategy.md` | Overall test approach, levels, and tools |
+| `docs/test-plans/test-plan.md` | Scope, approach, and entry/exit criteria for this portfolio |
+| `docs/test-scenarios/test-scenarios.md` | Index of test scenarios SCN-001..SCN-013 (workbook is authoritative) |
+| `test-cases.xlsx` | QA master workbook: requirements, scenarios, test cases, RTM, defects, executions |
+| `docs/risk-assessment.md` | Product and project risks |
+| `docs/test-environment.md` | Test environments and data rules |
+| `docs/automation-guide.md` | UI automation architecture, configuration, and how to run it |
+| `docs/ci-cd.md` | GitHub Actions pipeline, artifacts, and merge policy |
+| `docs/troubleshooting.md` | Known issues and resolutions from building this portfolio |
+| `api-testing/README.md` | Postman collection and API execution notes |
+| `database-testing/README.md` | Synthetic dataset and SQL test evidence |
+| `docs/interview-prep.md` | STAR-format summaries of the key findings |
