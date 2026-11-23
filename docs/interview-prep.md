@@ -1,6 +1,6 @@
 # Interview Preparation — STAR Stories from This Portfolio
 
-Short, honest summaries of the real work in this repository, in Situation–Task–Action–Result form. Everything below is backed by the workbook (`test-cases.xlsx`), the execution records (EXEC-001..EXEC-008), and the GitHub Actions history.
+Short, honest summaries of the real work in this repository, in Situation–Task–Action–Result form. Everything below is backed by the workbook (`test-cases.xlsx`), the execution records (EXEC-001..EXEC-010), and the GitHub Actions history.
 
 ## 1. "Tell me about a bug you found" — BUG-001, login accepts any password
 
