@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import Select, WebDriverWait
 
 from automation.pages.base_page import BasePage
 
@@ -26,15 +26,28 @@ class AccountsOverviewPage(BasePage):
     def account_balances(self):
         """Return {account_id: balance} for every row of the overview table.
 
-        The demo populates the table asynchronously, so wait until at least
-        one account row has rendered before reading.
+        The demo populates the table asynchronously and unreliably: it can
+        render with no rows at all, or with only some of the rows, and fill
+        in the rest a moment later. A single read can therefore be empty or
+        partial, so read repeatedly until two consecutive reads agree on a
+        non-empty table, and only then trust the result.
         """
         self.wait.until(
             EC.visibility_of_element_located(self.ACCOUNT_TABLE)
         )
-        self.wait.until(
-            lambda d: len(d.find_elements(*self.ACCOUNT_ROWS)) >= 1
-        )
+        last = {}
+
+        def stable_balances(driver):
+            nonlocal last
+            current = self._read_balances_once()
+            if current and current == last:
+                return current
+            last = current
+            return False
+
+        return WebDriverWait(self.driver, 20).until(stable_balances)
+
+    def _read_balances_once(self):
         table = self.driver.find_element(*self.ACCOUNT_TABLE)
         balances = {}
         for row in table.find_elements(By.CSS_SELECTOR, "tbody tr"):
