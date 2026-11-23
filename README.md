@@ -1,81 +1,120 @@
-# Digital Banking QA
+# Digital Banking QA Portfolio
 
-End-to-end Quality Assurance portfolio project using the public ParaBank demo application.
+[![QA Smoke Tests](https://github.com/tegargr28/digital-banking-qa/actions/workflows/qa-smoke.yml/badge.svg)](https://github.com/tegargr28/digital-banking-qa/actions/workflows/qa-smoke.yml)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![Selenium](https://img.shields.io/badge/Selenium-WebDriver-green)
+![Pytest](https://img.shields.io/badge/Pytest-automation-orange)
 
-## Scope
-- Manual testing: test plan, scenarios, test cases, defect reports.
-- UI automation: Python, Selenium WebDriver, Pytest, Page Object Model.
-- API testing: Postman collection for the ParaBank REST API (`api-testing/`); all designed cases executed.
-- Database testing: local synthetic dataset and SQL exercises. No access to ParaBank's production database is assumed.
-- CI: GitHub Actions and Jenkins.
-- Containerization: Docker Compose for a local Jenkins controller.
+End-to-end Quality Assurance portfolio built on the **ParaBank public demo** banking application. It covers the full QA cycle — requirements, test design, manual execution, defect reporting, API testing, SQL testing, UI automation, and CI — with **every result backed by a real execution**. Nothing in this repository is fabricated: unexecuted tests stay *Not Run*, and all data is fictional.
 
-## Application Under Test
-ParaBank demo: https://parabank.parasoft.com/parabank/index.htm
+**Author:** Tegar · **Application under test:** [ParaBank demo](https://parabank.parasoft.com/parabank/index.htm)
 
-Use only the public demo with non-sensitive, synthetic test data. Do not enter real banking credentials or personal information, and do not perform load or security testing against the public service.
+---
 
-## Local setup (Windows PowerShell)
+## Results at a glance
+
+| Area | Result |
+|---|---|
+| Requirements covered | 11 (FR-001..FR-011), all validated by executed tests |
+| Test scenarios | 13 (SCN-001..SCN-013) |
+| UI test cases executed | **33** — 23 Pass, 10 Fail |
+| API test cases executed | **8** — all Pass |
+| SQL test cases executed | **6** — all Pass |
+| Defects found | **8 genuine defects** — 3 Critical, 3 High, 2 Low (all documented, status Open) |
+| Execution records | 10 sessions (EXEC-001..EXEC-010) with evidence |
+| Automated tests in CI | 4 Selenium tests, green on every merge to `main` |
+
+Full detail lives in the QA master workbook: [`test-cases.xlsx`](test-cases.xlsx) (Requirements, Scenarios, Test Cases, RTM, Bug Reports, Test Execution, API & SQL Cases, Summary).
+
+## Skills demonstrated
+
+| Skill | Evidence in this repository |
+|---|---|
+| Test design | 13 scenarios and 47 test cases (positive, negative, boundary) traced to requirements in the RTM |
+| Manual testing | Full execution of all 33 UI cases across 9 banking features, recorded in EXEC-001..EXEC-010 |
+| Defect reporting | 8 reproducible defect reports with steps, expected vs actual results, severity and priority |
+| API testing | Postman collection for the ParaBank REST API; transfers verified by exact balance changes |
+| SQL / database testing | Local synthetic banking dataset (SQLite) with integrity, reconciliation and duplicate checks |
+| Test automation | Python + Selenium + Pytest, Page Object Model, headless Chrome, failure screenshots |
+| CI/CD | GitHub Actions pipeline on every pull request; merges only on green; HTML + JUnit reports as artifacts |
+| Documentation | SRS, Test Strategy, Test Plan, Automation Guide, CI/CD and Troubleshooting guides |
+
+## Key findings — defects discovered
+
+| ID | Severity | Finding |
+|---|---|---|
+| BUG-001 | Critical | Web login accepts an **invalid password** and opens the Accounts Overview (the REST API rejects it correctly) |
+| BUG-006 | Critical | Bill Pay reports "successful" but the payment is **never posted** — no balance change, no activity entry, no funds check |
+| BUG-003 | Critical | Transfer **above the account balance** is accepted, driving the account to −$1,000.00 |
+| BUG-002 | High | Zero and **negative** transfer amounts are accepted; a negative amount reverses the money flow |
+| BUG-004 | High | Double-clicking Transfer **posts the payment twice** |
+| BUG-007 | High | Update Contact Info **always fails** with a generic error; changes are never saved |
+| BUG-005 | Low | Empty transfer amount returns a generic internal error instead of a validation message |
+| BUG-008 | Low | Empty loan amount returns the same generic internal error instead of validation |
+
+Reproduction steps and evidence for each defect: workbook `test-cases.xlsx`, *Bug Reports* sheet. Interview-ready summaries: [`docs/interview-prep.md`](docs/interview-prep.md).
+
+## Repository map
+
+| Path | Contents |
+|---|---|
+| `test-cases.xlsx` | QA master workbook — the single source for requirements, cases, defects, executions |
+| `automation/` | Selenium UI tests (Page Object Model): homepage, login, transfer |
+| `api-testing/` | Postman collection + API testing notes |
+| `database-testing/` | Synthetic SQL dataset, queries, and the SQL test runner |
+| `docs/` | SRS, strategy, plan, automation, CI/CD, troubleshooting, interview prep |
+| `.github/workflows/` | GitHub Actions pipeline (`qa-smoke.yml`) |
+| `Jenkinsfile`, `docker-compose.yml` | Jenkins alternative pipeline and local controller |
+
+## Quick start (Windows PowerShell)
+
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -r requirements.txt
-Copy-Item .env.example .env
 pytest -m smoke
 ```
 
-The first Selenium run may download/resolve a compatible browser driver through Selenium Manager. Google Chrome must be installed.
+Headless run (as in CI) and HTML report:
 
-## Run headless
 ```powershell
 $env:HEADLESS="true"
-pytest -m smoke
-```
-
-## Reports
-```powershell
 pytest -m smoke --html=reports/report.html --self-contained-html
 ```
 
-## Jenkins
-A starter `Jenkinsfile` is included. Run Jenkins locally with:
-```powershell
-docker compose up -d
-```
-Open http://localhost:8080 and complete the initial Jenkins setup. Install/configure a Python-capable agent and ensure Chrome/ChromeDriver are available on that agent before running browser tests. The included pipeline assumes a Linux agent with Python, Google Chrome, and Git installed; adjust the agent label to match your environment.
-
-## Project status
-Learning and demonstration portfolio. All results are recorded only after real execution; unexecuted tests stay **Not Run** and are never reported as passed.
-
-- **Phase 0 — Audit:** complete. The repository started as a scaffold; gaps were catalogued before any changes.
-- **Phase 1 — Automation foundation:** merged via PR #1. Config-driven headless driver factory, automatic failure screenshots, Jenkins headless default, additional pytest markers. The QA master workbook `test-cases.xlsx` (Requirements, Test Scenarios, 22 Test Cases, RTM, Bug Reports, Test Execution, API and SQL Test Cases, Test Summary) is built on the project template. Five ParaBank REST API checks were executed for real; the UI smoke test passed in GitHub Actions CI after the driver fix.
-- **Phase 2 — Documentation and login automation:** Test Strategy, Risk Assessment, and Test Environment documents added (`docs/`); Selenium login coverage (valid and invalid credentials) added under `automation/`. The login suite found a real defect — **BUG-001**: the ParaBank web login accepts an invalid password (the API rejects it correctly). The defect is recorded in the workbook and the automation test is marked `xfail` against it.
-- **Phase 3 — API testing:** Postman collection for the ParaBank REST API added (`api-testing/`), mirroring the workbook's API cases. All 8 designed API cases have been executed for real (EXEC-001 and EXEC-006), including a transfer whose balance changes were verified to the cent.
-- **Phase 4 — SQL testing and full manual UI execution:** a local synthetic dataset (`database-testing/`, SQLite, fictional data) backs the 6 SQL cases — all executed and passing (EXEC-007). A full manual browser session then executed the remaining 19 UI cases (EXEC-008): 14 passed and 5 failed, surfacing four more genuine defects — **BUG-002** (zero/negative transfer amounts accepted; a negative amount reverses the money flow), **BUG-003** (transfer above the balance accepted, driving the account to -$1000.00), **BUG-004** (double submission posts a transfer twice), **BUG-005** (empty amount returns a generic internal error instead of a validation message). Workbook totals: 22 UI cases executed (16 Pass, 6 Fail), 8 API cases Pass, 6 SQL cases Pass, 5 defects recorded — all from real executions.
-- **Phase 5 — Transfer automation:** Selenium coverage for the valid-transfer case (TRF-TC-001) added under `automation/` (Accounts Overview and Transfer Funds page objects), asserting the exact balance deltas on both accounts.
-- **Phase 6 — Remaining features:** the last four features were explored first (forms, messages, behaviour probes), then given designed cases and a full manual execution (EXEC-010): 11 new cases, 7 Pass, 4 Fail. Bill Payment's form validations work, but a payment reported as "successful" is **never posted** to the account and no funds check exists (**BUG-006**, Critical); Update Contact Info submissions always return a generic internal error and never save (**BUG-007**); an empty loan amount hits the same generic error instead of validation (**BUG-008**). Loan approval/denial and account opening (both types, exact $90.00 funding) work correctly. Every feature in the workbook now has executed test cases: **33 UI cases (23 Pass, 10 Fail), 8 API cases Pass, 6 SQL cases Pass, 8 defects recorded** — all from real executions (EXEC-001..EXEC-010).
-
-- **Phase 7 — Documentation:** the documentation set was completed and aligned to professional standards: a Requirements Specification (SRS), an Automation Guide, CI/CD documentation, and a Troubleshooting Guide were added; stale content was corrected; the scenario index now mirrors the workbook; and every document carries owner/version/status metadata and cross-references.
-
-See `docs/interview-prep.md` for STAR-format summaries of the key findings.
-
-See `docs/test-strategy.md` for scope and approach, and the workbook's Test Execution sheet for the execution record behind every reported status.
+Google Chrome must be installed; Selenium Manager resolves the matching driver on first run. Configuration is environment-driven — see `.env.example`. Only the published public demo account and fictional data are used; never enter real banking credentials, and do not run load or security testing against the public service.
 
 ## Documentation index
 
 | Document | Purpose |
 |---|---|
-| `docs/requirements-specification.md` | Functional requirements FR-001..FR-011 and their validation status |
-| `docs/test-strategy.md` | Overall test approach, levels, and tools |
-| `docs/test-plans/test-plan.md` | Scope, approach, and entry/exit criteria for this portfolio |
-| `docs/test-scenarios/test-scenarios.md` | Index of test scenarios SCN-001..SCN-013 (workbook is authoritative) |
-| `test-cases.xlsx` | QA master workbook: requirements, scenarios, test cases, RTM, defects, executions |
-| `docs/risk-assessment.md` | Product and project risks |
-| `docs/test-environment.md` | Test environments and data rules |
-| `docs/automation-guide.md` | UI automation architecture, configuration, and how to run it |
-| `docs/ci-cd.md` | GitHub Actions pipeline, artifacts, and merge policy |
-| `docs/troubleshooting.md` | Known issues and resolutions from building this portfolio |
-| `api-testing/README.md` | Postman collection and API execution notes |
-| `database-testing/README.md` | Synthetic dataset and SQL test evidence |
-| `docs/interview-prep.md` | STAR-format summaries of the key findings |
+| [`docs/requirements-specification.md`](docs/requirements-specification.md) | Functional requirements FR-001..FR-011 and their validation status |
+| [`docs/test-strategy.md`](docs/test-strategy.md) | Overall test approach, levels, and tools |
+| [`docs/test-plans/test-plan.md`](docs/test-plans/test-plan.md) | Scope, approach, and entry/exit criteria |
+| [`docs/test-scenarios/test-scenarios.md`](docs/test-scenarios/test-scenarios.md) | Index of scenarios SCN-001..SCN-013 (workbook is authoritative) |
+| [`docs/risk-assessment.md`](docs/risk-assessment.md) | Product and project risks |
+| [`docs/test-environment.md`](docs/test-environment.md) | Test environments and data rules |
+| [`docs/automation-guide.md`](docs/automation-guide.md) | Automation architecture, configuration, and how to run it |
+| [`docs/ci-cd.md`](docs/ci-cd.md) | Pipeline, artifacts, and merge policy |
+| [`docs/troubleshooting.md`](docs/troubleshooting.md) | Known issues and resolutions from building this portfolio |
+| [`api-testing/README.md`](api-testing/README.md) | Postman collection and API execution notes |
+| [`database-testing/README.md`](database-testing/README.md) | Synthetic dataset and SQL test evidence |
+| [`docs/interview-prep.md`](docs/interview-prep.md) | STAR-format summaries of the key findings |
+
+## Project journey
+
+| Phase | Outcome |
+|---|---|
+| 0 — Audit | Repository scaffold audited; gaps catalogued before any change |
+| 1 — Automation foundation | Config-driven headless driver factory, failure screenshots, QA workbook built; CI turned green |
+| 2 — Docs & login automation | Test Strategy, Risk Assessment, Test Environment; login automation found **BUG-001** |
+| 3 — API testing | Postman collection added; all 8 API cases executed, transfers verified to the cent |
+| 4 — SQL & full UI execution | 6 SQL cases Pass on a synthetic dataset; 19 remaining UI cases executed, **BUG-002..BUG-005** found |
+| 5 — Transfer automation | Selenium transfer test with exact balance-delta assertions, green in CI |
+| 6 — Remaining features | Bill Pay, Update Contact, Loan, Open Account executed; **BUG-006..BUG-008** found; all features covered |
+| 7 — Documentation | SRS, Automation Guide, CI/CD and Troubleshooting docs added; documentation aligned to professional standards |
+
+---
+
+*Learning and demonstration portfolio. The application under test is a public demo operated by Parasoft; its data may reset without notice. This project does not represent production banking experience, and no real customer or financial data is used anywhere in it.*
