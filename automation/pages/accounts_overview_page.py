@@ -75,6 +75,17 @@ class AccountsOverviewPage(BasePage):
             self.wait.until(EC.visibility_of_element_located(self.NEW_ACCOUNT_TYPE))
         )
         type_select.select_by_value("1")  # 0 = CHECKING, 1 = SAVINGS
+        # The funding-account dropdown is populated asynchronously; wait
+        # until the funding account is actually among its options.
+        WebDriverWait(self.driver, 20).until(
+            lambda d: str(from_account_id)
+            in [
+                option.get_attribute("value")
+                for option in Select(
+                    d.find_element(*self.NEW_ACCOUNT_FROM)
+                ).options
+            ]
+        )
         Select(self.driver.find_element(*self.NEW_ACCOUNT_FROM)).select_by_value(
             str(from_account_id)
         )

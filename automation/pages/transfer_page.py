@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import Select, WebDriverWait
 
 from automation.pages.base_page import BasePage
 
@@ -13,26 +13,39 @@ class TransferPage(BasePage):
     AMOUNT_INPUT = (By.ID, "amount")
     SUBMIT_BUTTON = (By.CSS_SELECTOR, "form input[type='submit']")
 
-    def available_account_ids(self):
-        """Account IDs offered by the Transfer Funds form.
+    def _stable_option_values(self, locator):
+        """Option values of a select element, read once they stop changing.
 
-        Both dropdowns carry the same set, and it is not every account on
-        the overview: loan accounts, for example, are listed on the
-        Accounts Overview but cannot be selected for a transfer.
+        The form's dropdowns are populated asynchronously: the select is
+        visible before its options arrive, so reading them immediately
+        can return an empty or partial list. Poll until two consecutive
+        reads agree on a non-empty list.
         """
-        from_select = Select(
-            self.wait.until(EC.visibility_of_element_located(self.FROM_ACCOUNT))
-        )
-        return [
-            option.get_attribute("value")
-            for option in from_select.options
-            if option.get_attribute("value")
-        ]
+        self.wait.until(EC.visibility_of_element_located(locator))
+        last = None
+
+        def read(driver):
+            nonlocal last
+            select = Select(driver.find_element(*locator))
+            values = [
+                option.get_attribute("value")
+                for option in select.options
+                if option.get_attribute("value")
+            ]
+            if values and values == last:
+                return values
+            last = values
+            return False
+
+        return WebDriverWait(self.driver, 20).until(read)
+
+    def available_account_ids(self):
+        """Account IDs offered by the Transfer Funds form, once loaded."""
+        return self._stable_option_values(self.FROM_ACCOUNT)
 
     def transfer(self, from_account_id, to_account_id, amount):
-        from_select = Select(
-            self.wait.until(EC.visibility_of_element_located(self.FROM_ACCOUNT))
-        )
+        self._stable_option_values(self.FROM_ACCOUNT)
+        from_select = Select(self.driver.find_element(*self.FROM_ACCOUNT))
         from_select.select_by_value(str(from_account_id))
         Select(self.driver.find_element(*self.TO_ACCOUNT)).select_by_value(
             str(to_account_id)
