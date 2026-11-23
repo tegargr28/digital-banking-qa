@@ -30,8 +30,15 @@ Short, honest summaries of the real work in this repository, in Situation–Task
 - **Action:** Built a small synthetic banking dataset in SQLite (fictional customers, accounts, transfers) with the expected invariants documented in the seed file, then wrote one check query per test case and a runner that builds the dataset fresh and reports actual outputs.
 - **Result:** All 6 SQL cases executed and passed (EXEC-007), and each check has a defined failure mode, so a future data change that breaks an invariant fails loudly. The README states plainly that the dataset is simulated.
 
-## 5. "How do you keep a portfolio honest?"
+## 5. "Why do you verify beyond the confirmation page?" — BUG-006, the payment that never happened
 
-- Statuses are recorded only after real execution; unexecuted work stays **Not Run**, and coverage gaps (Bill Payment detail cases; Update Contact Info, Request Loan, Open New Account) are written down in the RTM instead of being papered over.
+- **Situation:** Testing Bill Pay, the result page announced "Bill Payment … was successful" for a $5.00 payment.
+- **Task:** Confirm the payment actually happened, not just that the message appeared.
+- **Action:** Compared the source account's activity list and balance immediately before and after the payment — no $5.00 entry, no balance change. Repeated with $99,999.00 against an $810.00 balance: again "successful", again nothing posted, showing there is also no funds check. The form's own validations (mismatched account numbers, empty amount) were verified separately and do work.
+- **Result:** Recorded as BUG-006 (Critical): the success message cannot be trusted because the posting step silently does nothing. The case's expected result had been written to require both the confirmation *and* the ledger entry, which is exactly what caught it.
+
+## 6. "How do you keep a portfolio honest?"
+
+- Statuses are recorded only after real execution; unexecuted work stays **Not Run**. While Bill Payment, Update Contact Info, Request Loan, and Open New Account were still unexplored, that gap was written down in the RTM instead of being papered over — and closed later by exploring the features first and only then designing cases (Phase 6).
 - When the demo environment blocked a test, it was recorded as **Blocked** with the reason, not quietly dropped.
 - Every reported number traces to an execution record (EXEC-xxx) or a CI run.
