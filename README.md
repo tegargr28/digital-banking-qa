@@ -11,6 +11,8 @@ Everything reported here comes from tests I actually ran. Test cases that have n
 
 Application under test: https://parabank.parasoft.com/parabank/index.htm
 
+My GitHub profile: https://github.com/tegargr28
+
 ## Results at a glance
 
 | Area | Result |
