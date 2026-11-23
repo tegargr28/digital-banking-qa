@@ -13,6 +13,22 @@ class TransferPage(BasePage):
     AMOUNT_INPUT = (By.ID, "amount")
     SUBMIT_BUTTON = (By.CSS_SELECTOR, "form input[type='submit']")
 
+    def available_account_ids(self):
+        """Account IDs offered by the Transfer Funds form.
+
+        Both dropdowns carry the same set, and it is not every account on
+        the overview: loan accounts, for example, are listed on the
+        Accounts Overview but cannot be selected for a transfer.
+        """
+        from_select = Select(
+            self.wait.until(EC.visibility_of_element_located(self.FROM_ACCOUNT))
+        )
+        return [
+            option.get_attribute("value")
+            for option in from_select.options
+            if option.get_attribute("value")
+        ]
+
     def transfer(self, from_account_id, to_account_id, amount):
         from_select = Select(
             self.wait.until(EC.visibility_of_element_located(self.FROM_ACCOUNT))
